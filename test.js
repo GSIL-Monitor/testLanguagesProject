@@ -1,14 +1,16 @@
-const interval = 7
+const moment = require('moment');
+const sendingInterval = 5
 
-const x = new Date()
-y = x.getMinutes()
-
-console.log(x);
-console.log(y);
-console.log(y%interval);
-const newMinutes = y-y%interval;
-console.log(newMinutes);
-x.setMinutes(newMinutes);
-console.log(x.valueOf());
+console.log(new Date())
+const now = moment();
+const oldSecond = now.second();
+console.log(oldSecond)
+const newSecond = oldSecond-oldSecond%sendingInterval
+console.log(newSecond)
+now.second(newSecond);
+console.log(now.unix())
 
 
+
+x = moment().milliseconds(0)
+console.log(x.unix());

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "crc": "^3.8.0"
+    "crc": "^3.8.0",
+    "moment": "^2.23.0"
   }
 }
