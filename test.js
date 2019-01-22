@@ -1,6 +1,8 @@
-const drawEcgWithInterval = {
-    timer: 3,
-    x: 0,
+class drawEcgWithInterval {
+    constructor (){
+        this.timer = null;
+        this.x = 0;
+    }
 
     startInterval (){
         console.log('start', this.timer);
@@ -9,11 +11,12 @@ const drawEcgWithInterval = {
             console.log('x', this.x);
         }, 500)
         console.log('start', this.timer);
-    },
+    }
 
     stopInterval (){
         console.log('stop', this.timer);
         this.timer && clearInterval(this.timer);
+        this.timer = null;
         console.log('stop', this.timer);
     }
 }
@@ -23,10 +26,12 @@ const drawEcgWithInterval = {
 // drawEcgWithInterval.stopInterval()
 // setTimeout(drawEcgWithInterval.stopInterval, 2000);
 
+let drawEcg;
 function start() {
-    drawEcgWithInterval.startInterval();
+    drawEcg = new drawEcgWithInterval();
+    drawEcg.startInterval();
 }
 
 function stop() {
-    drawEcgWithInterval.stopInterval();
+    drawEcg.stopInterval();
 }
