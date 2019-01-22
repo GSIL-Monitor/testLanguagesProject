@@ -1,31 +1,46 @@
-function intToUint8Array(param, arr){
-    let num = param.content;
-    let bytes = param.bytes;
-    arr = arr || [];
-    const integer = parseInt(num/256);
-    const remainder = num%256;
-    console.log('inte', integer, remainder);
-
-    arr.unshift(remainder);
-    if (integer>=256) intToUint8Array({content: integer, bytes: bytes}, arr);
-    else if(integer>0) arr.unshift(integer);
-
-    if (bytes){
-        for (let i=0, j = bytes-arr.length; i<j; i++){
-            arr.unshift(0);
-        }
+class bytesQueue {
+    constructor (){
+        this.list = [];
+        this.byteOffset = 0;
+        this.length = 0;
     }
-    return new Uint8Array(arr)
-}
-function uint8ArrayToInt(uint8Array) {
-    let num = 0;
-    uint8Array.forEach(function (value, index) {
-        num = (num*256)+ value;
-    });
-    return num
-}
 
-x = intToUint8Array({content:1547974380000, bytes:8})
-console.log(x)
-console.log(uint8ArrayToInt(x))
+    put (unit8Array){
+        this.list.push(unit8Array);
+        this.length += unit8Array.length;
+    }
 
+    get (len){
+        if(len > 0){
+            let readArr = new Uint8Array(len);
+            let readIndex = 0;
+            while(readIndex < len){
+                if(this.list.length>0){
+                    let tmpArr = this.list.shift();
+                    let tmpLen = tmpArr.length;
+                    let remainderLen = len-readIndex;
+                    if(tmpLen >= remainderLen){
+                        //足夠了
+                        let tmpArrPart = tmpArr.subarray(0, remainderLen);
+                        readArr.set(tmpArrPart,readIndex);
+                        readIndex += tmpArrPart.length;
+                        if(remainderLen < tmpLen){
+                            let newUint8Array = tmpArr.subarray(remainderLen, tmpLen);
+                            this.list.unshift(newUint8Array);
+                        }
+                        break;
+                    }else{
+                        readArr.set(tmpArr,readIndex);
+                        readIndex += tmpLen;
+                    }
+                }else{
+                    readArr = readArr.subarray(0, readIndex);
+                    break;
+                }
+            }
+            this.length -= readArr.length;
+            return readArr;
+        }
+        return null;
+    }
+}
