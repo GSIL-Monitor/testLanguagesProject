@@ -1,46 +1,32 @@
-class bytesQueue {
-    constructor (){
-        this.list = [];
-        this.byteOffset = 0;
-        this.length = 0;
-    }
+const drawEcgWithInterval = {
+    timer: 3,
+    x: 0,
 
-    put (unit8Array){
-        this.list.push(unit8Array);
-        this.length += unit8Array.length;
-    }
+    startInterval (){
+        console.log('start', this.timer);
+        this.timer = setInterval(()=> {
+            this.x += 1;
+            console.log('x', this.x);
+        }, 500)
+        console.log('start', this.timer);
+    },
 
-    get (len){
-        if(len > 0){
-            let readArr = new Uint8Array(len);
-            let readIndex = 0;
-            while(readIndex < len){
-                if(this.list.length>0){
-                    let tmpArr = this.list.shift();
-                    let tmpLen = tmpArr.length;
-                    let remainderLen = len-readIndex;
-                    if(tmpLen >= remainderLen){
-                        //足夠了
-                        let tmpArrPart = tmpArr.subarray(0, remainderLen);
-                        readArr.set(tmpArrPart,readIndex);
-                        readIndex += tmpArrPart.length;
-                        if(remainderLen < tmpLen){
-                            let newUint8Array = tmpArr.subarray(remainderLen, tmpLen);
-                            this.list.unshift(newUint8Array);
-                        }
-                        break;
-                    }else{
-                        readArr.set(tmpArr,readIndex);
-                        readIndex += tmpLen;
-                    }
-                }else{
-                    readArr = readArr.subarray(0, readIndex);
-                    break;
-                }
-            }
-            this.length -= readArr.length;
-            return readArr;
-        }
-        return null;
+    stopInterval (){
+        console.log('stop', this.timer);
+        this.timer && clearInterval(this.timer);
+        console.log('stop', this.timer);
     }
+}
+
+
+// drawEcgWithInterval.startInterval()
+// drawEcgWithInterval.stopInterval()
+// setTimeout(drawEcgWithInterval.stopInterval, 2000);
+
+function start() {
+    drawEcgWithInterval.startInterval();
+}
+
+function stop() {
+    drawEcgWithInterval.stopInterval();
 }
